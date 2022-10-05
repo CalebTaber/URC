@@ -29,7 +29,7 @@ int main(int argc, char * argv[]) {
   sin.sin_family = AF_INET;
   sin.sin_port = htons(src_port);
   sin.sin_addr.s_addr = INADDR_ANY;
-  
+
   if (bind(fd, (const struct sockaddr*)&sin, sizeof(sin)) != 0) {
     perror("Bind error");
     exit(1);
@@ -49,11 +49,13 @@ int main(int argc, char * argv[]) {
   bzero((char*)&dest, sizeof(dest));
   dest.sin_family = AF_INET;
   dest.sin_port = htons(dest_port);
-    
+
   if (inet_aton(destination, &dest.sin_addr) != 1)  perror("inet_aton");
-    
+
   printf("Sending to: %s port %d\n", inet_ntoa(dest.sin_addr), ntohs(dest.sin_port));
-    
+
+  // TODO need to add opcode as first byte of message so we can get a response from the server
+
   int bytes_sent = sendto(fd, message, strlen(message), 0, (const struct sockaddr*)&dest, sizeof(dest));
   printf("Sent %d bytes.\n", bytes_sent);
 
